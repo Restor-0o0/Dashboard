@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+    <style>
+        :root{
+            --main-bg-color--: #b3b3b368;
+            --main-content-1--: #b3b3b368;
+            --main-content-2--: #1d145b;
+            --button--: #0b0d747e;
+            --button-hover:#1d145b;
+         }
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-bar{
+            display:flex;
+            flex-direction: column;
+            background: var(--main-bg-color--);
+            height: 400px;
+            width: 300px;
+
+            border-radius: 20px;
+        }
+        .LogIn{
+            color: var(--main-content-2--);
+            margin-left: 37%;
+            text-decoration: none;
+            cursor: default;
+        }
+        .Reg{
+            color: var(--main-content-2--);
+            text-decoration: none;
+            cursor: default;
+            margin-top: 0;
+        }
+        .Reg:hover{
+            color: var(--main-content-2--);
+            text-decoration: none;
+            cursor: default;
+            margin-top: 0;
+            text-decoration: underline;
+            cursor: default;
+        }
+        input{
+            width:  200px;
+            height: 30px;
+            border-radius: 10px;
+            border: 1;
+            margin-left: 15%;
+        }
+        p{
+            color: var(--main-content-2--);
+            margin-left: 15%;
+            cursor: default;
+        }
+        a{
+            display: inline-block; /* Делаем элемент блочным, чтобы можно было управлять размерами и отступами */
+            text-decoration: none; /* Убираем стандартное подчеркивание для стилизации */
+            color: #000; /* Устанавливаем цвет текста (можно изменить) */
+            width: 50px;
+            height: 20px;
+            margin-top: 30px;
+            margin-left: 43%;
+        }
+        .confirm{
+            height: 30px;
+            width: 100px;
+            margin-top: 30px;
+            color: var(--main-content-2--);
+            margin-left: 50%;
+            background:var(--button--);
+            text-decoration: none;
+            cursor: default;
+            border: 2px solid var(--button--);
+            border-radius: 20px;
+        }
+        .confirm:hover{
+            background: var(--button-hover);
+            border: 2px solid var(--button--);
+            margin-left: 50%;
+        }
+        input[type="text"], input[type="password"] {
+            width: 200px;
+            padding: 10px;
+            margin-left: 0px;
+            margin-right: 10px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Добавьте стили для кнопки */
+        input[type="submit"] {
+            background-color: var(--button--);
+            color: white;
+            padding: 10px 15px;
+            margin-left: 46px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: var(--button-hover);
+        }
+                button{
+            margin-left: 120px;
+            border-radius: 20px;
+            height: 30px;
+            background: var(--button--);
+        }
+        button:hover{
+            margin-left: 120px;
+            border-radius: 20px;
+            height: 30px;
+            background: var(--button-hover);
+        }
+    </style>
+        <div class="login-bar">
+            <h1 class="LogIn">LogIn</h1>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+</body>
+</html>
