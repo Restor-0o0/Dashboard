@@ -1,8 +1,8 @@
 from django import forms
-from .models import TypeSensUser
+from .models import GroupUser
 
-class TypeSensUserForm(forms.ModelForm):
+class GroupUserForm(forms.ModelForm):
 
     class Meta:
-        model = TypeSensUser
-        fields = [  'TypeCount', 'CountVals', 'DrawingType', 'Priority']
+        model = GroupUser
+        fields = [ 'Group', 'TypeCount', 'CountVals', 'DrawingType', 'Priority']

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TypesCount,TypeSens,Role,Object,TimeMark,UserDate,TypeSensRole,Sensor,SensObject,DataSens,UserObject,DrawingType,TypeSensUser
+from .models import TypesCount,TypeSens,Role,Object,TimeMark,UserDate,TypeSensRole,Sensor,SensObject,DataSens,UserObject,DrawingType,GroupUser,Groups,SensGroup
 
 
 
@@ -57,8 +57,18 @@ class DrawingTypeAdmin(admin.ModelAdmin):
     def __str__(self):
         return self.Name
 
-class TypeSensUserAdmin(admin.ModelAdmin):
-    list_display = ('User','Type','DrawingType','Priority')
+class GroupsAdmin(admin.ModelAdmin):
+    list_display = ('ID','Name','Comment')
+    def __str__(self):
+        return self.Name
+
+class SensGroupAdmin(admin.ModelAdmin):
+    list_display = ('Sensor','Group')
+    def __str__(self):
+        return self.Name
+
+class GroupUserAdmin(admin.ModelAdmin):
+    list_display = ('User','Group','DrawingType','Priority')
 
 class TypesCountAdmin(admin.ModelAdmin):
     list_display = ('ID','Nume')
@@ -78,5 +88,8 @@ admin.site.register(SensObject,SensObjectAdmin)
 admin.site.register(DataSens,DataSensAdmin)
 admin.site.register(UserObject,UserObjectAdmin)
 admin.site.register(DrawingType,DrawingTypeAdmin)
-admin.site.register(TypeSensUser,TypeSensUserAdmin)
+admin.site.register(Groups,GroupsAdmin)
+admin.site.register(SensGroup,SensGroupAdmin)
+admin.site.register(GroupUser,GroupUserAdmin)
+
 # Register your models here.

@@ -7,12 +7,14 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
 from statistics import mean
-from .models import TypesCount,TypeSens,Role,Object,TimeMark,UserDate,TypeSensRole,Sensor,SensObject,DataSens,UserObject,DrawingType,TypeSensUser
-from .forms import TypeSensUserForm
+from .models import TypesCount,TypeSens,Role,Object,TimeMark,UserDate,TypeSensRole,Sensor,SensObject,DataSens,UserObject,DrawingType,GroupUser,Groups,SensGroup
+from .forms import GroupUserForm
 from django import forms
+from django.db.models import Avg
+from django.db.models.functions import TruncHour
 
 class SettingsForms():
-    Form = TypeSensUserForm()
+    Form = GroupUserForm()
     Name = ''
 
     def __init__(self,Form,Name):
@@ -21,9 +23,9 @@ class SettingsForms():
 
 def form_handler(request):
     if request.method == 'POST':
-        instance = TypeSensUser.objects.get(User=request.POST.get('User'),Type=request.POST.get('Type'),DrawingType=request.POST.get('DrawingType'))
-        form = TypeSensUserForm(request.POST,instance=instance)
-        print(request.POST.get('User'),request.POST.get('Type'),request.POST.get('DrawingType'))
+        instance = GroupUser.objects.get(User=request.POST.get('User'),Type=request.POST.get('Group'),DrawingType=request.POST.get('DrawingType'))
+        form = GroupUser(request.POST,instance=instance)
+        print(request.POST.get('User'),request.POST.get('Group'),request.POST.get('DrawingType'))
         print('method')
         if form.is_valid():
             form.save()
@@ -34,9 +36,9 @@ def form_handler(request):
 def index(request):
 
     if request.method == 'POST':
-        instance = TypeSensUser.objects.get(User=request.POST.get('User'),Type=request.POST.get('Type'),DrawingType=request.POST.get('DrawingType'))
-        form = TypeSensUserForm(request.POST,instance=instance)
-        print(request.POST.get('User'),request.POST.get('Type'),request.POST.get('DrawingType'))
+        instance = GroupUser.objects.get(User=request.user,Group=request.POST.get('Group'),DrawingType=request.POST.get('DrawingType'))
+        form = GroupUserForm(request.POST,instance=instance)
+        print(request.user,request.POST.get('Group'),request.POST.get('DrawingType'))
         print('method')
         if form.is_valid():
             form.save()
@@ -50,26 +52,26 @@ def index(request):
     numbs = []
     metrics = []
     head_numb = []
-    UserTypes = TypeSensUser.objects.filter(User=request.user).order_by('DrawingType','Priority')
+    UserTypes = GroupUser.objects.filter(User=request.user).order_by('DrawingType','Priority')
     print(UserTypes)
     formsheaders = []
 
 
-    #forms = { str(UserType.Type.Name): TypeSensUserForm(instance=UserType) for UserType in UserTypes}
-    formsheaders = {str(form.Type.ID): form.Type.Name for form in UserTypes}
+    formsheaders = {str(form.Group.ID): form.Group.Name for form in UserTypes}
 
-    formss = [SettingsForms(TypeSensUserForm(instance=UserType),str(UserType.Type.Comment)+'('+str(UserType.DrawingType.Name)+')') for UserType in UserTypes]
-        #form.Form.fields['Priority'].widget = forms.Select(choices=list(TypeSensUser.objects.filter(User=request.user,DrawingType=DrawingType.objects.get(Name=form.Form.fields['DrawingType']))).values('Priority'))
+    formss = [SettingsForms(GroupUserForm(instance=UserType),str(UserType.Group.Comment)+'('+str(UserType.DrawingType.Name)+')') for UserType in UserTypes]
     ActiveObject = UserObject.objects.filter(User=request.user,Active=True).first().Object
 
-    ActiveTypes = TypeSensUser.objects.filter(User=request.user).order_by('Priority')
+    ActiveGroups = GroupUser.objects.filter(User=request.user).order_by('Priority')
 
 
-    for obj in ActiveTypes:
-        # = SensObject.objects.filter(Object=ActiveObject)
-        #senss = sens.filter(Sensor__in=Sensor.objects.filter(Type=obj.Type))
-
-        sens = Sensor.objects.filter(ID__in=SensObject.objects.filter(Object=ActiveObject,Sensor__in=Sensor.objects.filter(Type=obj.Type)))
+    for obj in ActiveGroups:
+        Types = SensGroup.objects.filter(Group=obj.Group).values_list('Sensor', flat=True)
+        Types = Sensor.objects.filter(ID__in=Types.values_list('Sensor_id', flat=True)).values_list('Type', flat=True)
+        Types = TypeSens.objects.filter(ID__in=Types)
+        print(Types)
+        print('____________________________-')
+        sens = Sensor.objects.filter(ID__in=SensObject.objects.filter(Object=ActiveObject,Sensor__in=Sensor.objects.filter(Type__in=Types)))
 
         if(obj.DrawingType.Name == 'Number'):
             if(obj.TypeCount.Nume == 'Day'):
@@ -77,9 +79,12 @@ def index(request):
             elif(obj.TypeCount.Nume == 'Record'):
                 Sensors = SensObject.objects.filter(Object=ActiveObject).values('Sensor')
                 datavalues = DataSens.objects.filter(Sens__in=sens).values_list('Value', flat=True).order_by('id')[:int(obj.CountVals)]
+                vx = DataSens.objects.select_related('Time').annotate(hour=TruncHour('Time__DateTime')).values('hour').annotate(avg_val=Avg('Value'))
+                for vl in vx:
+                    print( vl['hour'],'___',vl['avg_val'])
                 numbs.append(round(mean(datavalues),1))
-                metrics.append(obj.Type.MetricUnits)
-                head_numb.append(obj.Type.Comment)
+                metrics.append(Types.first().MetricUnits   )
+                head_numb.append(obj.Group.Comment)
                 num_numbs = num_numbs+1
                 print(numbs)
                 print(metrics)

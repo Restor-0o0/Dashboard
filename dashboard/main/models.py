@@ -111,15 +111,30 @@ class TypesCount(models.Model):
 
     def __str__(self):
         return self.Nume
+class Groups(models.Model):
+    ID = models.AutoField(primary_key=True)
+    Name = models.CharField(max_length=50)
+    Comment = models.CharField(max_length=250)
 
-class TypeSensUser(models.Model):
+    def __str__(self):
+        return self.Name
+
+
+class SensGroup(models.Model):
+    Sensor = models.ForeignKey(Sensor,  on_delete=models.CASCADE)
+    Group = models.ForeignKey(Groups,  on_delete=models.CASCADE)
+
+class Meta:
+        unique_together = ("Sensor", "Group")
+
+
+class GroupUser(models.Model):
     User = models.ForeignKey(User,on_delete=models.CASCADE)
-    Type = models.ForeignKey(TypeSens, on_delete=models.CASCADE)
+    Group = models.ForeignKey(Groups, on_delete=models.CASCADE)
     TypeCount = models.ForeignKey(TypesCount,on_delete=models.CASCADE)
     CountVals = models.IntegerField()
     DrawingType = models.ForeignKey(DrawingType, on_delete=models.SET_NULL, null=True)
     Priority = models.IntegerField(default=0)
 
-
     class Meta:
-        unique_together = ("User", "Type","DrawingType")
+        unique_together = ("User", "Group","DrawingType")
