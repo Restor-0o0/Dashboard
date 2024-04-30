@@ -129,6 +129,7 @@ class Meta:
 
 
 class GroupUser(models.Model):
+    ID = models.AutoField(primary_key=True)
     User = models.ForeignKey(User,on_delete=models.CASCADE)
     Group = models.ForeignKey(Groups, on_delete=models.CASCADE)
     TypeCount = models.ForeignKey(TypesCount,on_delete=models.CASCADE)

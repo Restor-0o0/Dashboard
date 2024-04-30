@@ -25,7 +25,7 @@ class SettingsForms():
 
 def form_handler(request):
     if request.method == 'POST':
-        instance = GroupUser.objects.get(User=request.POST.get('User'),Type=request.POST.get('Group'),DrawingType=request.POST.get('DrawingType'))
+        instance = GroupUser.objects.get()
         form = GroupUser(request.POST,instance=instance)
         print(request.POST.get('User'),request.POST.get('Group'),request.POST.get('DrawingType'))
         print('method')
@@ -38,7 +38,8 @@ def form_handler(request):
 def index(request):
 
     if request.method == 'POST':
-        instance = GroupUser.objects.get(User=request.user,Group=request.POST.get('Group'),DrawingType=request.POST.get('DrawingType'))
+        print(request.POST.keys())
+        instance = GroupUser.objects.get(pk=request.POST.get('ID'))
         form = GroupUserForm(request.POST,instance=instance)
         print(request.user,request.POST.get('Group'),request.POST.get('DrawingType'))
         print('method')
@@ -58,10 +59,16 @@ def index(request):
     print(UserTypes)
     formsheaders = []
 
-
+    print(UserTypes.values('ID'))
     formsheaders = {str(form.Group.ID): form.Group.Name for form in UserTypes}
 
-    formss = [SettingsForms(GroupUserForm(instance=UserType),str(UserType.Group.Comment)+'('+str(UserType.DrawingType.Name)+')') for UserType in UserTypes]
+    formss = []
+    for UserType in UserTypes:
+        elem = SettingsForms(GroupUserForm(instance=UserType),str(UserType.Group.Comment)+'('+str(UserType.DrawingType.Name)+')')
+        elem.Form.fields['ID'].initial = UserType.pk
+        formss.append(elem)
+
+    print(formss[0].Form.fields)
     ActiveObject = UserObject.objects.filter(User=request.user,Active=True).first().Object
 
     ActiveGroups = GroupUser.objects.filter(User=request.user).order_by('Priority')
@@ -75,7 +82,7 @@ def index(request):
         print('____________________________-')
         #sens = Sensor.objects.filter(ID__in=SensObject.objects.filter(Object=ActiveObject,Sensor__in=Sensor.objects.filter(Type__in=Types)))
 
-        if(obj.DrawingType.Name == 'Number'):
+        if('Number' in obj.DrawingType.Name):
             if(obj.TypeCount.Nume == 'Day'):
 
                 current_time = timezone.now()
@@ -88,10 +95,14 @@ def index(request):
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
 
-                numbs.append(round(mean(datavalues),1))
-                metrics.append(Types.first().MetricUnits    )
-                head_numb.append(obj.Group.Comment)
-                num_numbs = num_numbs+1
+                try:
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits    )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
+                except:
+                    pass
+
                 print(numbs)
                 print(metrics)
                 print(head_numb)
@@ -117,11 +128,14 @@ def index(request):
                 print(datavalues)
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
+                try:
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits   )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
 
-                numbs.append(round(mean(datavalues),1))
-                metrics.append(Types.first().MetricUnits   )
-                head_numb.append(obj.Group.Comment)
-                num_numbs = num_numbs+1
+                except:
+                    pass
                 print(numbs)
                 print(metrics)
                 print(head_numb)
@@ -137,10 +151,14 @@ def index(request):
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
 
-                numbs.append(round(mean(datavalues),1))
-                metrics.append(Types.first().MetricUnits   )
-                head_numb.append(obj.Group.Comment)
-                num_numbs = num_numbs+1
+                try:
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits   )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
+                except:
+                    pass
+
                 print(numbs)
                 print(metrics)
                 print(head_numb)
@@ -156,21 +174,25 @@ def index(request):
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
 
-                numbs.append(round(mean(datavalues),1))
-                metrics.append(Types.first().MetricUnits   )
-                head_numb.append(obj.Group.Comment)
-                num_numbs = num_numbs+1
+                try:
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits   )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
+                except:
+                    pass
+
                 print(numbs)
                 print(metrics)
                 print(head_numb)
 
-        elif(obj.DrawingType.Name == 'Graph'):
+        if('Graph' in obj.DrawingType.Name):
             if(obj.TypeCount.Nume == 'Record'):
                 Sensors = SensObject.objects.filter(Object=ActiveObject).values('Sensor')
                 datavalues = DataSens.objects.filter(Sens__in=sens).values_list('Value', flat=True).order_by('id')[:int(obj.CountVals)]
                 timemark = DataSens.objects.filter(Sens__in=sens).values_list('Time', flat=True).order_by('id')[:int(obj.CountVals)]
                 time_ = TimeMark.objects.filter(ID__in=timemark).values_list('DateTime', flat=True)
-                head.append(obj.Type.Comment)
+                head.append(obj.Group.Comment)
                 labels.append([time.strftime(" %H:%M:%S") for time in time_])
                 graph.append(list(datavalues))
                 num_graphs = num_graphs+1

@@ -68,7 +68,7 @@ class SensGroupAdmin(admin.ModelAdmin):
         return self.Name
 
 class GroupUserAdmin(admin.ModelAdmin):
-    list_display = ('User','Group','DrawingType','Priority')
+    list_display = ('ID','User','Group','DrawingType','Priority')
 
 class TypesCountAdmin(admin.ModelAdmin):
     list_display = ('ID','Nume')
