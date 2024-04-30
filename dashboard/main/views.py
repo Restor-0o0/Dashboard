@@ -95,13 +95,12 @@ def index(request):
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
 
-                try:
+                if datavalues.exists():
                     numbs.append(round(mean(datavalues),1))
                     metrics.append(Types.first().MetricUnits    )
                     head_numb.append(obj.Group.Comment)
                     num_numbs = num_numbs+1
-                except:
-                    pass
+
 
                 print(numbs)
                 print(metrics)
@@ -109,11 +108,11 @@ def index(request):
             elif(obj.TypeCount.Nume == 'Record'):
                 Sensors = SensObject.objects.filter(Object=ActiveObject).values('Sensor')
                 datavalues = DataSens.objects.filter(Sens__in=sens).values_list('Value', flat=True).order_by('id')[:int(obj.CountVals)]
-
-                numbs.append(round(mean(datavalues),1))
-                metrics.append(Types.first().MetricUnits   )
-                head_numb.append(obj.Group.Comment)
-                num_numbs = num_numbs+1
+                if datavalues.exists():
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits   )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
                 print(numbs)
                 print(metrics)
                 print(head_numb)
@@ -128,14 +127,12 @@ def index(request):
                 print(datavalues)
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
-                try:
+                if datavalues.exists():
                     numbs.append(round(mean(datavalues),1))
-                    metrics.append(Types.first().MetricUnits   )
+                    metrics.append(Types.first().MetricUnits)
                     head_numb.append(obj.Group.Comment)
                     num_numbs = num_numbs+1
 
-                except:
-                    pass
                 print(numbs)
                 print(metrics)
                 print(head_numb)
@@ -151,13 +148,12 @@ def index(request):
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
 
-                try:
+                if datavalues.exists():
                     numbs.append(round(mean(datavalues),1))
                     metrics.append(Types.first().MetricUnits   )
                     head_numb.append(obj.Group.Comment)
                     num_numbs = num_numbs+1
-                except:
-                    pass
+
 
                 print(numbs)
                 print(metrics)
@@ -174,13 +170,11 @@ def index(request):
               #  for vl in datavalues:
                #     print( vl['hour'],'___',vl['avg_val'])
 
-                try:
+                if datavalues.exists():
                     numbs.append(round(mean(datavalues),1))
                     metrics.append(Types.first().MetricUnits   )
                     head_numb.append(obj.Group.Comment)
                     num_numbs = num_numbs+1
-                except:
-                    pass
 
                 print(numbs)
                 print(metrics)
@@ -199,6 +193,92 @@ def index(request):
                 print(graph)
                 print(labels)
                 print(head)
+            elif(obj.TypeCount.Nume == 'Hour'):
+
+                current_time = timezone.now()
+
+                hours_ago = current_time - timedelta(hours=obj.CountVals)
+
+                datavalues = DataSens.objects.select_related('Time').filter(Sens__in=sens,Time__DateTime__gte=hours_ago ,Time__DateTime__lte=current_time).annotate(hour=TruncHour('Time__DateTime')).values('hour').annotate(avg_val=Avg('Value'))
+                #datavalues = datavalues.values_list('avg_val', flat=True)
+                print('----------',list(datavalues.values_list('avg_val', flat=True)))
+                print('----------',list(datavalues.values_list('hour', flat=True)))
+              #  for vl in datavalues:
+               #     print( vl['hour'],'___',vl['avg_val'])
+                if datavalues.exists():
+                    head.append(obj.Group.Comment)
+                    labels.append([time.strftime(" %H") for time in list(datavalues.values_list('hour', flat=True))])
+                    graph.append(list(datavalues.values_list('avg_val', flat=True)))
+                    num_graphs = num_graphs+1
+
+                print(labels)
+                print(graph)
+                print(head)
+            elif(obj.TypeCount.Nume == 'Day'):
+
+                current_time = timezone.now()
+
+                hours_ago = current_time - timedelta(days=obj.CountVals)
+
+                datavalues = DataSens.objects.select_related('Time').filter(Sens__in=sens,Time__DateTime__gte=hours_ago ,Time__DateTime__lte=current_time).annotate(hour=TruncHour('Time__DateTime')).values('hour').annotate(avg_val=Avg('Value')).values_list('avg_val', flat=True)
+                #datavalues = datavalues.values_list('avg_val', flat=True)
+                print(datavalues)
+              #  for vl in datavalues:
+               #     print( vl['hour'],'___',vl['avg_val'])
+
+                if datavalues.exists():
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits    )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
+
+
+                print(numbs)
+                print(metrics)
+                print(head_numb)
+            elif(obj.TypeCount.Nume == 'Week'):
+
+                current_time = timezone.now()
+
+                hours_ago = current_time - timedelta(weeks=obj.CountVals)
+
+                datavalues = DataSens.objects.select_related('Time').filter(Sens__in=sens,Time__DateTime__gte=hours_ago ,Time__DateTime__lte=current_time).annotate(hour=TruncHour('Time__DateTime')).values('hour').annotate(avg_val=Avg('Value')).values_list('avg_val', flat=True)
+                #datavalues = datavalues.values_list('avg_val', flat=True)
+                print(datavalues)
+              #  for vl in datavalues:
+               #     print( vl['hour'],'___',vl['avg_val'])
+
+                if datavalues.exists():
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits   )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
+
+
+                print(numbs)
+                print(metrics)
+                print(head_numb)
+            elif(obj.TypeCount.Nume == 'Month'):
+
+                current_time = timezone.now()
+
+                hours_ago = current_time - timedelta(months=obj.CountVals)
+
+                datavalues = DataSens.objects.select_related('Time').filter(Sens__in=sens,Time__DateTime__gte=hours_ago ,Time__DateTime__lte=current_time).annotate(hour=TruncHour('Time__DateTime')).values('hour').annotate(avg_val=Avg('Value')).values_list('avg_val', flat=True)
+                #datavalues = datavalues.values_list('avg_val', flat=True)
+                print(datavalues)
+              #  for vl in datavalues:
+               #     print( vl['hour'],'___',vl['avg_val'])
+
+                if datavalues.exists():
+                    numbs.append(round(mean(datavalues),1))
+                    metrics.append(Types.first().MetricUnits   )
+                    head_numb.append(obj.Group.Comment)
+                    num_numbs = num_numbs+1
+
+                print(numbs)
+                print(metrics)
+                print(head_numb)
 
                 #current_time = timezone.now()
 

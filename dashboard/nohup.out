@@ -1,0 +1,31 @@
+Traceback (most recent call last):
+  File "/usr/home/rest/DashBoard/dashboard/main/scripts/add_val_DB.py", line 6, in <module>
+    from ..models import DataSens, Sensor, TimeMark
+ImportError: attempted relative import with no known parent package
+python3: can't open file '/usr/home/rest/DashBoard/dashboard/main/scripts/add_val_DB.py': [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/usr/home/rest/DashBoard/dashboard/main/add_val_DB.py", line 6, in <module>
+    from .models import DataSens, Sensor, TimeMark
+ImportError: attempted relative import with no known parent package
+Traceback (most recent call last):
+  File "/usr/home/rest/DashBoard/dashboard/main/add_val_DB.py", line 6, in <module>
+    from models import DataSens, Sensor, TimeMark
+  File "/usr/home/rest/DashBoard/dashboard/main/models.py", line 2, in <module>
+    from django.contrib.auth.models import User
+  File "/usr/home/rest/rest/lib/python3.9/site-packages/django/contrib/auth/models.py", line 3, in <module>
+    from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+  File "/usr/home/rest/rest/lib/python3.9/site-packages/django/contrib/auth/base_user.py", line 57, in <module>
+    class AbstractBaseUser(models.Model):
+  File "/usr/home/rest/rest/lib/python3.9/site-packages/django/db/models/base.py", line 129, in __new__
+    app_config = apps.get_containing_app_config(module)
+  File "/usr/home/rest/rest/lib/python3.9/site-packages/django/apps/registry.py", line 260, in get_containing_app_config
+    self.check_apps_ready()
+  File "/usr/home/rest/rest/lib/python3.9/site-packages/django/apps/registry.py", line 137, in check_apps_ready
+    settings.INSTALLED_APPS
+  File "/usr/home/rest/rest/lib/python3.9/site-packages/django/conf/__init__.py", line 102, in __getattr__
+    self._setup(name)
+  File "/usr/home/rest/rest/lib/python3.9/site-packages/django/conf/__init__.py", line 82, in _setup
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Requested setting INSTALLED_APPS, but settings are not configured. You must either define the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.
+python3: can't open file '/usr/home/rest/DashBoard/dashboard/scripts/add_val_DB.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/home/rest/DashBoard/dashboard/main/add_val_DB.py': [Errno 2] No such file or directory
