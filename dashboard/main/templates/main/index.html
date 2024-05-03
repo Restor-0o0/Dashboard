@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="ru">
 <head>
@@ -12,427 +13,41 @@
     <title> </title>
 </head>
  <body>
+    <link rel="stylesheet" href="/static/main/css/index.css">
+    <script>
+        /*Так надо,не спрашивай, я просто тупой и так надо,просто смирись и прими это достойно,только не плачь*/
+        var ChartsArray = [];
+        var head = {{head|safe}};
+        var labels = {{labels|safe}};
+        var graph = {{graph}};
 
-    <style>
-         .light-theme{
-            --text--:  #000000ac;
-            --text-2:   #000000d6;
-            --color-2: #d2d2d2;
-            --color-2-1:#d5d5d568;
-            --color-3: #e1e1e1;
-            --color-4: #4c393962;
-            --color-5: #4c393962;
-         }
-         .dark-theme{
-            --text--:  #FFF;
-            --text-2:  #ffffff62;
-            --color-2: #070a2c5e;
-            --color-2-1: #050926b4;
-            --color-3: #1d145b;
-            --color-4: #d29a1d;
-            --color-5: #0b0d747e;
+        var head_numb = {{head_numb|safe}};
+        var numbs = {{numbs}};
+        var metrics = {{metrics|safe}};
+
+        themeName = localStorage.getItem('theme');
+        document.documentElement.className = themeName;
+        if(themeName == 'dark-theme'){
+            btn.textContent = '☽';
+
+        } else{
+            btn.textContent = '☀';
         }
-         img {
-            max-width: 90%;
-            height: auto;
-        }
-        .graph{
-            color: var(--text--);
-        }
-    </style>
-     <style>
-
-        @media(min-width: 768px){
-
-            body{
-                background: var(--color-3);
-                display: grid;
-                grid: [stack] 1fr/-webkit-min-content [stack] 1fr;
-                grid: [stack] 1fr/min-content [stack] 1fr
-            }
-            /* тонкая белая линия */
-            .line{
-                width: 95vw;
-                height: 1px;
-                margin: auto;
-                background: var(--text--);
-            }
-            /* основные контейнеры */
-            .header_{
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                background: var(--color-3);
-                width: 95vw;
-                margin: calc(1vw + 1vh);
-                max-height: 5vh;
-                min-height: 5vh;
-                margin-bottom: 4vh;
-            }
-            .button-theme{
-                margin-left: 5vw;
-                margin-top: 5vh;
-                width: 60px;
-                height: 30px;
-                border-radius: 15px;
-                background-color: var(--color-2);
-                color: var(--text--);
-            }
-            .sensors_{
-                background: var(--color-3);
-            }
-            .username{
-                color: var(--text--);
-                margin-right: 3vw;
-            }
-            .data_div{
-                display: flex;
-                flex-direction: column;
+    </script>
 
 
-                margin: calc(0.45vh + 0.45vw);
-                height: 30vh;
-                width: 22vw;
-                background: var(--color-2);
-                border-radius: 10px;
-                border: 3px solid var(--color-2);
-                box-sizing: border-box;
-            }
-            .data_div_settings{
-                width: 5vw;
-                background: var(--color-2);
-            }
-            .wrapper_div{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: auto;
-                width: 95vw;
-                background: #00000000;
-                box-sizing: border-box;
-            }
-            .statistic_{
-                margin-top: 3vh;
-                margin-left: 1vw;
-                margin-right: 1vw;
-                height: 40vh;
-                width: 29vw;
-                background: var(--color-2);
-                border-radius: 10px;
-                border: 3px solid var(--color-2);
-                align-items:center;
-                justify-self: center;
-            }
-            /* текст и буквы(внутри контейнеров с возвращенными данными) */
-            .text_{
-                text-align: center;
-                height: 7vh;
-                color: var(--text--);
-                font-size: calc(1vh + 1vw);
-                font-family: Gill Sans, sans-serif;
-            }
-            .number_{
-                text-align: center;
-                margin: auto;
-                color: var(--text--);
-                font-size: calc(4vh + 4vw);
-                text-align: center;
-            }
-            .DataForm{
-                clear:both;
-                text-align:left;
-                width: 10vw;
-            }
-            .DataForm input{
-                background: var(--color-2-1);
-                color: var(--text--);
-                border-radius: 10px;
-                width: 19.5vw;
-                height: 3vh;
-                margin-right:0;
-                border-width: 2px;
-                border-color: var(--text--);
-
-            }
-            .DataForm label{
-                background: var(--color-2-1);
-                color: var(--text--);
-                border-radius: 10px;
-                width: 30vw;
-                height: 4vh;
-                margin-right:0;
-                text-align: right;
-
-            }
-            .DataForm select{
-                background: var(--color-2-1);
-                color: var(--text--);
-                border-radius: 10px;
-                width: 20vw;
-                height: 4vh;
-                margin-right:0;
-                border-width: 2px;
-                border-color: var(--text--);
-
-            }
-            .DataForm button{
-                background: var(--color-2-1);
-                color: var(--text--);
-                border-radius: 10px;
-                width: 19.5vw;
-                height: 3vh;
-                margin-right:0;
-                border-width: 2px;
-                border-color: var(--text--);
-            }
-
-            .DataForm select option{
-                background: var(--color-2-1);
-                color: var(--text--);
-                border-radius: 10px;
-                width: 20vw;
-                height: 3vh;
-                margin-right:0;
-            }
-            /*.text{
-                color: var(--text--);
-                margin-top: 1vh;
-                font-size: 150%;
-            }*/
-            /* Размеры графика из Chart.js */
-            .graph{
-                height: 90%;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            /* выезжающее слева окно */
-            @media (max-width:1540px) {
-
-            body>aside,
-            body>main {
-            grid-area: stack
-            }
-            }
-
-            #sidenav-open {
-            --easeOutExpo: cubic-bezier(0.16, 1, 0.3, 1);
-            --duration: .6s;
-            display: grid;
-            grid-template-columns: [nav] 1.5fr [escape] 2fr
-            }
-
-            #sidenav-open-close {
-
-            grid-template-columns: [nav] 0fr [escape] 0fr
-            }
-
-            @media (max-width:1540px) {
-            #sidenav-open {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-x: hidden;
-            overflow-y: auto;
-            overflow: hidden auto;
-            -ms-scroll-chaining: none;
-            overscroll-behavior: contain;
-            visibility: hidden;
-            transform: translateX(-110vw);
-            will-change: transform;
-            transition: transform var(--duration) var(--easeOutExpo), visibility 0s linear var(--duration)
-            }
-
-            #sidenav-open:target {
-            visibility: visible;
-            transform: translateX(0);
-            transition: transform var(--duration) var(--easeOutExpo)
-            }
-            }
-
-            @media (prefers-reduced-motion:reduce) {
-            #sidenav-open {
-            --duration: 1ms
-            }
-            }
-
-            #sidenav-button,
-            #sidenav-close {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
-            }
-
-            @media (min-width:1540px) {
-
-            #sidenav-button,
-            #sidenav-close {
-            display: none
-            }
-            }
-
-            nav {
-            display: inline-flex;
-            flex-direction: column;
-            color: var(--color-2-1);
-            border-radius: 30px;
-            }
-
-
-
-            @media (max-width:1540px) {
-            nav {
-            background-color: var(--color-2-1);
-            box-shadow: 5px 0 40px #1b1b1b;
-            }
-            }
-            .hamburger {
-
-            --size: 3.5rem;
-            display: flex;
-            align-content: center;
-            justify-content: center;
-            place-content: center;
-            padding: 0.6rem;
-            box-sizing: border-box;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            block-size: var(--size);
-            inline-size: var(--size);
-            outline: none;
-            transition: border-color .25s ease, background-color .25s ease
-            }
-
-            .hamburger:hover {
-            border-color: var(--text--);
-            border-color: var(--text--)
-            }
-
-            .hamburger:focus {
-            border-color: var(--text-2);
-            border-color: var(--text-2);
-            background: var(--text--);
-            background: var(--text--)
-            }
-
-            .hamburger:hover svg>line {
-            stroke: var(--text--);
-            stroke: var(--text--)
-            }
-
-            .hamburger:active {
-            background: var(--text-2);
-            background: var(--text-2)
-            }
-
-            .hamburger>svg {
-            width: 100%
-            }
-
-            .hamburger>svg>line {
-            stroke: #e2e2e2;
-            stroke: var(--text--);
-            stroke-width: 8px;
-            transition: stroke .25s ease
-            }
-            main>header {
-            display: flex;
-            align-items: center;
-            }
-
-
-            body {
-            min-block-size: 1vh;
-            font-family: BLOKK, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
-            padding: 0;
-
-            }
-            .scrollable-container {
-                width: 300px; /* Ширина контейнера */
-                height: 2000px; /* Высота контейнера */
-                overflow: clip; /* Включаем полосы прокрутки при необходимости */
-            }
-            /* Для выпадающих контейнеров в Меню */
-
-            details{
-            display:block;
-            background: var(--color-2-1);
-            width:40vw;
-            box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-radius: 8px;
-            border: 3px solid var(--color-2-1);
-            box-sizing: border-box;
-            overflow:hidden;
-            margin-bottom: 1.5rem;
-            margin-top: 2vh;
-            margin-left: 1vw;
-            }
-            summary::-webkit-details-marker{display:none;}
-            summary::-moz-list-bullet{list-style-type:none;}
-            summary::marker{display:none;}
-            summary {
-            display:block;
-            padding: .3em 1em .3em .9em;
-            border-bottom: 1px solid var(--text--);
-            font-size:1.4em;
-            cursor: pointer;
-            position: relative;
-            }
-            summary:before {
-            top: .4em;
-            right: .3em;
-            color: transparent;
-            width: 1em;
-            height: 1em;
-            content: "";
-            position: absolute;
-            transition: transform .5s;
-            }
-            details[open] > summary:before {
-            transform: scale(1,-1);
-            }
-            summary ~ * {
-            padding: 0 1em 10px 1.4em;
-            }
-            details[open] summary ~ *{
-            animation: sweep .5s ease-in-out;
-            }
-            @keyframes sweep {
-            0%    {opacity: 0;}
-            100%  {opacity: 1;}
-            }
-            summary:focus {
-            outline:0;
-            box-shadow: inset 0 0 1px rgba(0,0,0,0.3), inset 0 0 2px rgba(0,0,0,0.3);
-            }
-
-
-
-        }
-     </style>
-
+    <!--Выезжающее слева меню-->
     <aside id="sidenav-open">
         <nav>
             <button class="button-theme"></button>
             <details>
                 <Summary class="text_">Внешний вид</Summary>
-                <div class="data_div">w
-
-                </div>
-            </details>
-            <details>
-                <Summary class="text_">Отображение</Summary>
                 <div class="data_div">
 
                 </div>
             </details>
             <details>
-                <Summary class="text_">Данные</Summary>
+                <Summary class="text_">Отображение</Summary>
                 <div class="data_div_settings">
                     {% for form in forms %}
                     <details>
@@ -446,105 +61,24 @@
                     {% endfor %}
                 </div>
             </details>
+            <details>
+                <Summary class="text_">Данные</Summary>
+
+            </details>
             </details>
         <!--oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-->
         </nav>
         <a href="#sidenav-open-close" id="sidenav-close" title="Close Menu" aria-label="Close Menu" ></a>
     </aside>
 
-    <script>
-        const btn = document.querySelector('.button-theme');
-        var ChartsArray = [];
-        Them = 'NoThem';
-        function initialState(themeName) {
-            localStorage.setItem('theme',themeName);
-            document.documentElement.className = themeName;
-            document.cookie = `theme=${themeName}; max-age=31536000; path=/`; // Установка куки с новой темой
-            Them = themeName;
-            if(themeName == 'dark-theme'){
-                btn.textContent = '☽';
-
-            } else{
-                btn.textContent = '☀';
-            }
-
-        }
-
-        const cookies = document.cookie.split(';');
-
-        for (let cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'theme') {
-                initialState(value);
-            }
-        }
-        if (Them === 'NoThem')
-        {
-            initialState('light-theme');
-        }
-        function toggleTheme(){
-            if(localStorage.getItem('theme') == 'dark-theme'){
-                initialState('light-theme');
-            } else{
-                initialState('dark-theme');
-            }
-        }
-
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            toggleTheme()
+    <!--контейнер для отрисовки графика во весь экран-->
+    <div class="statistic_full" id="statistic_full">
+    </div>
 
 
-            var head = {{head|safe}};
-            var labels = {{labels|safe}};
-            var graph = {{graph}};
-            for (var i = 0; i < ChartsArray.length; i++) {
-                var ctx = document.getElementById('myChart'+i).getContext('2d');
-                ChartsArray[i].destroy();
-                ChartsArray[i] = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels[i],
-                    datasets: [{
-                        label: '',
-                        data: graph[i],
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            ticks: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
-                            },
-                            border: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
-                            },
-                            grid: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
-                            },
-                            border: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
-                            },
-                            grid: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
-                            },
-                            suggestedMin: 15,
-                            suggestedMax: 40
-                        }
-                    }
-                },
-            });
-            }
-            // Код Chart.js для создания графика
 
-        });
-    </script>
     <main>
+    <!--шапка с кнопкой и логином юзера-->
      <div class="header_">
 
         <a href="#sidenav-open" id="sidenav-button" class="hamburger" title="Open Menu" aria-label="Open Menu">
@@ -561,10 +95,8 @@
      </div>
      <div class="line"></div>
 
-
+    <!--цикл для отрисовки контейнеров со средними значениями-->
      <div>
-
-
         {% for i in num_numbs %}
         {% if i|divisibleby:4 %}
         <div class="wrapper_div">
@@ -575,9 +107,7 @@
                 <script>
                     var element = document.getElementById("hn{{ i }}");
                     var element1 = document.getElementById("nn{{ i }}");
-                    var head_numb = {{head_numb|safe}};
-                    var numbs = {{numbs}};
-                    var metrics = {{metrics|safe}};
+
                     var i = {{ i }};
                     element.textContent = head_numb[i];
                     element1.textContent = numbs[i]+ '' + metrics[i];
@@ -590,19 +120,17 @@
             {% endfor %}
         </div>
 
-                {% for i in num_graphs %}
-                {% if i|divisibleby:3 %}
-                <div class="wrapper_div">
+        <!--Цикл для отрисовки контейнеров с графиками-->
+            {% for i in num_graphs %}
+            {% if i|divisibleby:3 %}
+            <div class="wrapper_div">
                 {% endif %}
-                <div class="statistic_">
+                <div class="statistic_" id="d{{ i }}">
                     <h1 id="h{{ i }}" class="text_"></h1>
-                    <div class="graph">
+                    <div class="graph" id="d{{ i }}">
                         <canvas class="graph" id="myChart{{ i }}"></canvas>
                         <script>
                             var element = document.getElementById("h{{ i }}");
-                            var head = {{head|safe}};
-                            var labels = {{labels|safe}};
-                            var graph = {{graph}};
                             var i = {{ i }};
                             element.textContent = head[i];
                             // Код Chart.js для создания графика
@@ -654,6 +182,9 @@
                 {% endif %}
                 {% endfor %}
             </div>
+
+
+            <script src="{% static 'main/js/index.js' %}"></script>
     </main>
  </body>
 </html>
