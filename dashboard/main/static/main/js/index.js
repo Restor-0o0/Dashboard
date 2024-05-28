@@ -123,7 +123,6 @@ divs.forEach(div => {
 function handleClick(e){
     const clickedDivId = this.id;
     const number = parseInt(clickedDivId.slice(1)); // Получить число из строки id
-    console.log("Нажали на div с числом:", number);
     e.preventDefault();
     body.classList.add("lock"); // блокируем скролл веб-страницы
     modal.classList.add("statistic_full--open"); // открываем модальное окно
@@ -200,10 +199,9 @@ function handleClick(e){
     linkElement.href = '#';
     linkElement.classList.add('btn--close');
     linkElement.classList.add('btn');
-    linkElement.textContent = 'Close';
+    linkElement.textContent = 'Закрыть';
     linkElement.id = 'btn_close';
     linkElement.addEventListener("click", btnCloseHandler);
-    // Добавляем элемент <a> в качестве дочернего элемента к div
     modal.appendChild(linkElement);
 
 }

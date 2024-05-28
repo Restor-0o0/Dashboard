@@ -15,11 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
-from .views import LoginUser,index,form_handler
+from django.urls import path,include, re_path
+from rest_framework.routers import DefaultRouter
+from .views import LoginUser,index,form_handler,DataAPIView,SettingsAPIView,DrawingTypeViewSet,TypesCountViewSet
+
+router = DefaultRouter()
+router.register(r'groupuser',SettingsAPIView,basename='settings')
 
 urlpatterns = [
     path('index', index, name='index'),
-    path('', LoginUser.as_view(), name='login'),
+    path('', LoginUser.as_view(), name='log'),
     path('form-handler/', form_handler, name='form_handler'),
+    path('api/sensor/sensorlist',DataAPIView.as_view()),
+    path('api/', include(router.urls)),
+    path('api/v1/auth/', include('djoser.urls')),
+    path('api/typescountlist/',TypesCountViewSet.as_view(), name='types_count'),
+    path('api/drawingtypelist/',DrawingTypeViewSet.as_view(), name='drawing_type'),
+    re_path('^auth/', include('djoser.urls.authtoken')),
 ]
