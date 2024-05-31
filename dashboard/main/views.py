@@ -81,7 +81,7 @@ def index(request):
         Types = TypeSens.objects.filter(ID__in=Types)
 
         if('Number' in obj.DrawingType.Name):
-            if(obj.TypeCount.Nume == 'Day'):
+            if(obj.TypeCount.Name == 'Day'):
 
                 current_time = timezone.now()
 
@@ -96,7 +96,7 @@ def index(request):
                     num_numbs = num_numbs+1
 
 
-            elif(obj.TypeCount.Nume == 'Record'):
+            elif(obj.TypeCount.Name == 'Record'):
                 Sensors = SensObject.objects.filter(Object=ActiveObject).values('Sensor')
                 datavalues = DataSens.objects.filter(Sens__in=sens).values_list('Value', flat=True).order_by('id')[:int(obj.CountVals)]
                 if datavalues.exists():
@@ -105,7 +105,7 @@ def index(request):
                     head_numb.append(obj.Group.Comment)
                     num_numbs = num_numbs+1
 
-            elif(obj.TypeCount.Nume == 'Hour'):
+            elif(obj.TypeCount.Name == 'Hour'):
 
                 current_time = timezone.now()
 
@@ -120,7 +120,7 @@ def index(request):
                     num_numbs = num_numbs+1
 
 
-            elif(obj.TypeCount.Nume == 'Week'):
+            elif(obj.TypeCount.Name == 'Week'):
 
                 current_time = timezone.now()
 
@@ -135,7 +135,7 @@ def index(request):
                     num_numbs = num_numbs+1
 
 
-            elif(obj.TypeCount.Nume == 'Month'):
+            elif(obj.TypeCount.Name == 'Month'):
 
                 current_time = timezone.now()
 
@@ -152,7 +152,7 @@ def index(request):
 
 
         if('Graph' in obj.DrawingType.Name):
-            if(obj.TypeCount.Nume == 'Record'):
+            if(obj.TypeCount.Name == 'Record'):
                 Sensors = SensObject.objects.filter(Object=ActiveObject).values('Sensor')
                 datavalues = DataSens.objects.filter(Sens__in=sens).values_list('Value', flat=True).order_by('id')[:int(obj.CountVals)]
                 timemark = DataSens.objects.filter(Sens__in=sens).values_list('Time', flat=True).order_by('id')[:int(obj.CountVals)]
@@ -162,7 +162,7 @@ def index(request):
                 graph.append(list(datavalues))
                 num_graphs = num_graphs+1
 
-            elif(obj.TypeCount.Nume == 'Hour'):
+            elif(obj.TypeCount.Name == 'Hour'):
 
                 current_time = timezone.now()
 
@@ -177,7 +177,7 @@ def index(request):
                     num_graphs = num_graphs+1
 
 
-            elif(obj.TypeCount.Nume == 'Day'):
+            elif(obj.TypeCount.Name == 'Day'):
 
                 current_time = timezone.now()
 
@@ -192,7 +192,7 @@ def index(request):
                     num_graphs = num_graphs+1
 
 
-            elif(obj.TypeCount.Nume == 'Week'):
+            elif(obj.TypeCount.Name == 'Week'):
 
                 current_time = timezone.now()
 
@@ -207,7 +207,7 @@ def index(request):
                     num_graphs = num_graphs+1
 
 
-            elif(obj.TypeCount.Nume == 'Month') :
+            elif(obj.TypeCount.Name == 'Month') :
 
                 current_time = timezone.now()
 
@@ -281,7 +281,7 @@ class DataAPIView(APIView):
             Types = TypeSens.objects.filter(ID__in=Types)
 
             if('Number' in obj.DrawingType.Name):
-                if(obj.TypeCount.Nume == 'Day'):
+                if(obj.TypeCount.Name == 'Day'):
 
                     current_time = timezone.now()
 
@@ -297,7 +297,7 @@ class DataAPIView(APIView):
 
 
 
-                elif(obj.TypeCount.Nume == 'Record'):
+                elif(obj.TypeCount.Name == 'Record'):
                     Sensors = SensObject.objects.filter(Object=ActiveObject).values('Sensor')
                     datavalues = DataSens.objects.filter(Sens__in=sens).values_list('Value', flat=True).order_by('id')[:int(obj.CountVals)]
                     if datavalues.exists():
@@ -306,7 +306,7 @@ class DataAPIView(APIView):
                         head_numb.append(obj.Group.Comment)
                         num_numbs = num_numbs+1
 
-                elif(obj.TypeCount.Nume == 'Hour'):
+                elif(obj.TypeCount.Name == 'Hour'):
 
                     current_time = timezone.now()
 
@@ -321,7 +321,7 @@ class DataAPIView(APIView):
                         num_numbs = num_numbs+1
 
 
-                elif(obj.TypeCount.Nume == 'Week'):
+                elif(obj.TypeCount.Name == 'Week'):
 
                     current_time = timezone.now()
 
@@ -336,7 +336,7 @@ class DataAPIView(APIView):
                         num_numbs = num_numbs+1
 
 
-                elif(obj.TypeCount.Nume == 'Month'):
+                elif(obj.TypeCount.Name == 'Month'):
 
                     current_time = timezone.now()
 
@@ -352,7 +352,7 @@ class DataAPIView(APIView):
 
 
             if('Graph' in obj.DrawingType.Name):
-                if(obj.TypeCount.Nume == 'Record'):
+                if(obj.TypeCount.Name == 'Record'):
                     Sensors = SensObject.objects.filter(Object=ActiveObject).values('Sensor')
                     datavalues = DataSens.objects.filter(Sens__in=sens).values_list('Value', flat=True).order_by('id')[:int(obj.CountVals)]
                     timemark = DataSens.objects.filter(Sens__in=sens).values_list('Time', flat=True).order_by('id')[:int(obj.CountVals)]
@@ -362,7 +362,7 @@ class DataAPIView(APIView):
                     graph.append(list(datavalues))
                     num_graphs = num_graphs+1
 
-                elif(obj.TypeCount.Nume == 'Hour'):
+                elif(obj.TypeCount.Name == 'Hour'):
 
                     current_time = timezone.now()
 
@@ -377,7 +377,7 @@ class DataAPIView(APIView):
                         num_graphs = num_graphs+1
 
 
-                elif(obj.TypeCount.Nume == 'Day'):
+                elif(obj.TypeCount.Name == 'Day'):
 
                     current_time = timezone.now()
 
@@ -392,7 +392,7 @@ class DataAPIView(APIView):
                         num_graphs = num_graphs+1
 
 
-                elif(obj.TypeCount.Nume == 'Week'):
+                elif(obj.TypeCount.Name == 'Week'):
 
                     current_time = timezone.now()
 
@@ -407,7 +407,7 @@ class DataAPIView(APIView):
                         num_graphs = num_graphs+1
 
 
-                elif(obj.TypeCount.Nume == 'Month') :
+                elif(obj.TypeCount.Name == 'Month') :
 
                     current_time = timezone.now()
 

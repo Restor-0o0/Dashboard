@@ -71,7 +71,7 @@ class GroupUserAdmin(admin.ModelAdmin):
     list_display = ('ID','User','Group','DrawingType','Priority')
 
 class TypesCountAdmin(admin.ModelAdmin):
-    list_display = ('ID','Nume')
+    list_display = ('ID','Name')
     def __str__(self):
         return self.Nume
 

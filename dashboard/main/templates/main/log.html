@@ -1,29 +1,64 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Title</title>
 </head>
+
 <body>
     <style>
-        :root{
+        /*.{
+            --text--: #000000ac;
+            --text-2: #000000d6;
+            --color-2: #d2d2d2;
+            --color-2-2: #d2d2d2;
+            --color-2-1: #d5d5d568;
+            --color-3: #e1e1e1;
+
+            --color-5: #4c393962;
+        }
+
+        .{
+            --text--: #FFF;
+            --text-2: #ffffff62;
+            --color-2: #2c2c365e;
+            --color-2-2: #21212a;
+            --color-2-1: #1f2025b4;
+            --color-3: #484752;
+            --color-5: #4c4c5b7e;
+        }*/
+        .dark-theme {
+            --body--bg-color--: #484752;
+            --main-bg-color--: #2c2c365e;
+            --main-content-1--: #FFF;
+            --main-content-2--: #FFF;
+            --button--: #c6c5c5b4;
+            --button-hover: #6c6c6c;
+        }
+        .light-theme {
+            --body--bg-color--: #e1e1e1;
             --main-bg-color--: #b3b3b368;
-            --main-content-1--: #b3b3b368;
-            --main-content-2--: #1d145b;
-            --button--: #0b0d747e;
-            --button-hover:#1d145b;
-         }
-        body, html {
+            --main-content-1--: #000000;
+            --main-content-2--: #000000;
+            --button--: #d2d2d2;
+            --button-hover: #838383;
+        }
+
+        body,
+        html {
             height: 100%;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: var(--body--bg-color--);
         }
-        .login-bar{
-            display:flex;
+
+        .login-bar {
+            display: flex;
             flex-direction: column;
             background: var(--main-bg-color--);
             height: 400px;
@@ -31,19 +66,22 @@
 
             border-radius: 20px;
         }
-        .LogIn{
+
+        .LogIn {
             color: var(--main-content-2--);
             margin-left: 37%;
             text-decoration: none;
             cursor: default;
         }
-        .Reg{
+
+        .Reg {
             color: var(--main-content-2--);
             text-decoration: none;
             cursor: default;
             margin-top: 0;
         }
-        .Reg:hover{
+
+        .Reg:hover {
             color: var(--main-content-2--);
             text-decoration: none;
             cursor: default;
@@ -51,45 +89,55 @@
             text-decoration: underline;
             cursor: default;
         }
-        input{
-            width:  200px;
+
+        input {
+            width: 200px;
             height: 30px;
             border-radius: 10px;
             border: 1;
             margin-left: 15%;
         }
-        p{
+
+        p {
             color: var(--main-content-2--);
             margin-left: 15%;
             cursor: default;
         }
-        a{
-            display: inline-block; /* Делаем элемент блочным, чтобы можно было управлять размерами и отступами */
-            text-decoration: none; /* Убираем стандартное подчеркивание для стилизации */
-            color: #000; /* Устанавливаем цвет текста (можно изменить) */
+
+        a {
+            display: inline-block;
+            /* Делаем элемент блочным, чтобы можно было управлять размерами и отступами */
+            text-decoration: none;
+            /* Убираем стандартное подчеркивание для стилизации */
+            color: #000;
+            /* Устанавливаем цвет текста (можно изменить) */
             width: 50px;
             height: 20px;
             margin-top: 30px;
             margin-left: 43%;
         }
-        .confirm{
+
+        .confirm {
             height: 30px;
             width: 100px;
             margin-top: 30px;
             color: var(--main-content-2--);
             margin-left: 50%;
-            background:var(--button--);
+            background: var(--button--);
             text-decoration: none;
             cursor: default;
             border: 2px solid var(--button--);
             border-radius: 20px;
         }
-        .confirm:hover{
+
+        .confirm:hover {
             background: var(--button-hover);
             border: 2px solid var(--button--);
             margin-left: 50%;
         }
-        input[type="text"], input[type="password"] {
+
+        input[type="text"],
+        input[type="password"] {
             width: 200px;
             padding: 10px;
             margin-left: 0px;
@@ -109,30 +157,37 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         input[type="submit"]:hover {
             background-color: var(--button-hover);
         }
-                button{
+
+        button {
             margin-left: 120px;
             border-radius: 20px;
             height: 30px;
             background: var(--button--);
+            color: var(--main-content-1--);
         }
-        button:hover{
+
+        button:hover {
             margin-left: 120px;
             border-radius: 20px;
             height: 30px;
             background: var(--button-hover);
+            color: var(--main-content-1--);
         }
     </style>
-        <div class="login-bar">
-            <h1 class="LogIn">LogIn</h1>
-            <form method="post" action="{% url 'log' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Login</button>
-            </form>
-        </div>
+    <script src="{% static 'main/js/log.js' %}"></script>
+    <div class="login-bar">
+        <h1 class="LogIn">LogIn</h1>
+        <form method="post" action="{% url 'log' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
 </body>
+
 </html>

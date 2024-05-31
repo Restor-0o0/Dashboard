@@ -107,10 +107,10 @@ class DrawingType(models.Model):
 
 class TypesCount(models.Model):
     ID = models.AutoField(primary_key=True)
-    Nume = models.CharField(max_length=10)
+    Name = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.Nume
+        return self.Name
 class Groups(models.Model):
     ID = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=50)

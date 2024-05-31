@@ -1,5 +1,14 @@
 from rest_framework import serializers
-from .models import Sensor,GroupUser,DrawingType,TypesCount
+from .models import Sensor,GroupUser,DrawingType,TypesCount,Groups
+
+
+
+
+class GroupsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Groups
+        fields = '__all__'
+
 
 
 class SensorSerializer(serializers.ModelSerializer):
@@ -9,9 +18,10 @@ class SensorSerializer(serializers.ModelSerializer):
 
 
 class GroupUserSerializer(serializers.ModelSerializer):
+    Name = serializers.CharField(source='Group.Name')
     class Meta:
         model = GroupUser
-        fields = '__all__'
+        fields = ('ID','User','Group','TypeCount','DrawingType','Priority','CountVals','Name',)
         read_only = ['ID','User','Group']
 
 
