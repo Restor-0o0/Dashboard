@@ -1,7 +1,7 @@
 
 /*Код для смены тем(определение тем, слушатели на кнопку,сохранение темы в печеньках, перерисовка графиков после смены темы)*/
 const btn = document.querySelector('.button-theme');
-
+var multiplier = 60; //множитель на задания пролетав между точками графиков
 Them = 'NoThem';
 function initialState(themeName) {
     localStorage.setItem('theme',themeName);
@@ -45,6 +45,7 @@ btn.addEventListener('click', (e) => {
 
 for (var i = 0; i < ChartsArray.length; i++) {
 var ctx = document.getElementById('myChart'+i).getContext('2d');
+var length = graph[i].length * multiplier;
 ChartsArray[i].destroy();
 ChartsArray[i] = new Chart(ctx, {
 type: 'line',
@@ -56,6 +57,7 @@ data: {
     }]
 },
 options: {
+    responsive: true, maintainAspectRatio: false, width: length, height: 100,
     scales: {
         x: {
             ticks: {
@@ -78,15 +80,16 @@ options: {
             grid: {
                 color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
             },
-            suggestedMin: 15,
-            suggestedMax: 40
+
         }
     }
 },
 });
 }
-// Код Chart.js для создания графика
 
+var div_graph_scroll = document.getElementById("d{{ i }}");
+
+div_graph_scroll.setAttribute("style","width:"+length+ "px");
 });
 
 
@@ -115,14 +118,14 @@ function btnCloseHandler(e) {
 
 }
 
-
+/*
 divs.forEach(div => {
     div.addEventListener('click', handleClick);
 });
 
 function handleClick(e){
     const clickedDivId = this.id;
-    const number = parseInt(clickedDivId.slice(1)); // Получить число из строки id
+    const number = parseInt(clickedDivId.slice(2)); // Получить число из строки id
     e.preventDefault();
     body.classList.add("lock"); // блокируем скролл веб-страницы
     modal.classList.add("statistic_full--open"); // открываем модальное окно
@@ -138,9 +141,10 @@ function handleClick(e){
     // Создаем новый дочерний контейнер
     const childContainer = document.createElement('div');
     childContainer.classList.add('graph');
-
+    childContainer.setAttribute("style","width:"+4000+ "px");
     const canvasElement = document.createElement('canvas');
-    canvasElement.classList.add('graph');
+
+    //canvasElement.classList.add('graph');
     canvasElement.id = `myChart${number}`;
     childContainer.appendChild(canvasElement);
 
@@ -151,6 +155,7 @@ function handleClick(e){
         element.textContent = head[i];
         // Код Chart.js для создания графика
         var ctx = document.getElementById('myChart${number}').getContext('2d');
+        var length = graph[i].length * multiplier;
         var myChart${number} = new Chart(ctx, {
             type: 'line',
             data: {
@@ -161,6 +166,7 @@ function handleClick(e){
                 }]
             },
             options: {
+                responsive: true, maintainAspectRatio: false, width: length, height: 100,
                 scales: {
                     x: {
                         ticks: {
@@ -183,18 +189,24 @@ function handleClick(e){
                         grid: {
                             color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
                         },
-                        suggestedMin: 15,
-                        suggestedMax: 40
+
                     }
                 }
             },
         });
+        var div_graph_scroll = document.getElementById("d{{ i }}");
+
+        div_graph_scroll.setAttribute("style","width:"+length+ "px");
         ChartsArray.push(myChart${number});
     `;
-    childContainer.appendChild(scriptElement);
 
+    const scroll_div = document.createElement('div');
+    childContainer.classList.add('scroll_div');
+
+    childContainer.appendChild(scriptElement);
+    scroll_div.appendChild(childContainer)
     // Добавляем дочерний контейнер в элемент
-    modal.appendChild(childContainer);
+    modal.appendChild(scroll_div);
     const linkElement = document.createElement('a');
     linkElement.href = '#';
     linkElement.classList.add('btn--close');
@@ -205,3 +217,4 @@ function handleClick(e){
     modal.appendChild(linkElement);
 
 }
+*/

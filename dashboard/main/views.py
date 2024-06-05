@@ -16,7 +16,7 @@ from django.utils import timezone
 from datetime import timedelta
 from rest_framework import generics
 from rest_framework.views import APIView
-from .Serializer import SensorSerializer,GroupUserSerializer,DataSerializer,DataDrawingType,DataTypesCount
+from .Serializer import SensorSerializer,GroupUserReceiveSerializer,GroupUserSendSerializer,DataSerializer,DataDrawingType,DataTypesCount
 from rest_framework import permissions,viewsets
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -72,7 +72,7 @@ def index(request):
 
     ActiveObject = UserObject.objects.filter(User=request.user,Active=True).first().Object
 
-    ActiveGroups = GroupUser.objects.filter(User=request.user).order_by('Priority')
+    ActiveGroups = GroupUser.objects.filter(User=request.user,Active=True).order_by('Priority')
 
 
     for obj in ActiveGroups:
@@ -440,23 +440,29 @@ class DataAPIView(APIView):
         serializerdata.is_valid(raise_exception=True)
         return Response(serializerdata.data)
 
+
 class DataSettingsViewAPIView(generics.UpdateAPIView):
     queryset = GroupUser.objects.all()
-    serializer_class = GroupUserSerializer
+    serializer_class = GroupUserSendSerializer
 
 
 
 
-class SettingsAPIView(viewsets.ModelViewSet):
-    serializer_class = GroupUserSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+class SettingsAPIView(APIView):
 
-    def get_queryset(self):
-        return GroupUser.objects.filter(User=self.request.user)
+    def get(self,request):
+        return Response(GroupUserSendSerializer(GroupUser.objects.filter(User=self.request.user), many=True).data)
 
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def put(self,request):
+        for i in request.data:
+            instance = GroupUser.objects.get(ID=i.get('ID'))
+            print(i)
+            dat = GroupUserReceiveSerializer(data = i,instance=instance)
+            print(dat.is_valid())
+            dat.save()
+
+
 
 
 class DrawingTypeViewSet(generics.ListAPIView):

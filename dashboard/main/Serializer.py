@@ -17,13 +17,18 @@ class SensorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class GroupUserSerializer(serializers.ModelSerializer):
+class GroupUserSendSerializer(serializers.ModelSerializer):
     Name = serializers.CharField(source='Group.Name')
     class Meta:
         model = GroupUser
         fields = ('ID','User','Group','TypeCount','DrawingType','Priority','CountVals','Name',)
         read_only = ['ID','User','Group']
 
+
+class GroupUserReceiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupUser
+        fields = '__all__'
 
 class DataTypesCount(serializers.ModelSerializer):
     class Meta:

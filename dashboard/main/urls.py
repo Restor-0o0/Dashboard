@@ -19,15 +19,15 @@ from django.urls import path,include, re_path
 from rest_framework.routers import DefaultRouter
 from .views import LoginUser,index,form_handler,DataAPIView,SettingsAPIView,DrawingTypeViewSet,TypesCountViewSet
 
-router = DefaultRouter()
-router.register(r'groupuser',SettingsAPIView,basename='settings')
+#router = DefaultRouter()
+#router.register(r'groupuser',SettingsAPIView,basename='settings')
 
 urlpatterns = [
     path('index', index, name='index'),
     path('', LoginUser.as_view(), name='log'),
     path('form-handler/', form_handler, name='form_handler'),
     path('api/sensor/sensorlist',DataAPIView.as_view()),
-    path('api/', include(router.urls)),
+    path('api/groupuser/',SettingsAPIView.as_view()),
     path('api/v1/auth/', include('djoser.urls')),
     path('api/typescountlist/',TypesCountViewSet.as_view(), name='types_count'),
     path('api/drawingtypelist/',DrawingTypeViewSet.as_view(), name='drawing_type'),

@@ -21,18 +21,15 @@
         var labels = {{labels|safe}};
         var graph = {{graph}};
 
+        var multiplier = 60; //множитель на задания пролетав между точками графиков
+
         var head_numb = {{head_numb|safe}};
         var numbs = {{numbs}};
         var metrics = {{metrics|safe}};
 
         themeName = localStorage.getItem('theme');
         document.documentElement.className = themeName;
-        if(themeName == 'dark-theme'){
-            btn.textContent = '☽';
 
-        } else{
-            btn.textContent = '☀';
-        }
     </script>
 
 
@@ -125,57 +122,127 @@
             {% if i|divisibleby:3 %}
             <div class="wrapper_div">
                 {% endif %}
-                <div class="statistic_" id="d{{ i }}">
+                <div class="statistic_" id="ds{{ i }}">
                     <h1 id="h{{ i }}" class="text_"></h1>
-                    <div class="graph" id="d{{ i }}">
-                        <canvas class="graph" id="myChart{{ i }}"></canvas>
-                        <script>
-                            var element = document.getElementById("h{{ i }}");
-                            var i = {{ i }};
-                            element.textContent = head[i];
-                            // Код Chart.js для создания графика
-                            var ctx = document.getElementById('myChart{{ i }}').getContext('2d');
-                            var myChart{{ i }} = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: labels[i],
-                                    datasets: [{
-                                        label: '',
-                                        data: graph[i],
-                                    }]
-                                },
-                                options: {
-                                    scales: {
-                                        x: {
-                                            ticks: {
-                                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                    <div class="scroll_div">
+                        <div class="graph" id="d{{ i }}">
+                            <canvas id="myChart{{ i }}"></canvas>
+                            <script>
+                                var element = document.getElementById("h{{ i }}");
+                                //var length_{{ i }} = graph[i].length * multiplier;
+                                var i = {{ i }};
+                                console.log(graph[i].length)
+                                element.textContent = head[i];
+                                // Код Chart.js для создания графика
+                                var ctx = document.getElementById('myChart{{ i }}').getContext('2d');
+                                var myChart{{ i }};
+                                if(graph[i].length > 9){
+                                myChart{{ i }} = new Chart(ctx, {
+                                    scaleOverride: true,
+
+                                    type: 'line',
+                                    data: {
+                                        labels: labels[i],
+                                        datasets: [{
+                                            label: '',
+                                            data: graph[i],
+
+                                        }]
+                                    },
+
+                                    options: {
+                                        responsive: true, maintainAspectRatio: false,
+                                        width: graph[i].length * multiplier, height: 100,
+                                        scales: {
+                                            x: {
+                                                ticks: {
+
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--'),
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                }
                                             },
-                                            border: {
-                                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
-                                            },
-                                            grid: {
-                                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                            y: {
+                                                ticks: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                },
+                                                //suggestedMin: 15,
+                                                //suggestedMax: 40
                                             }
-                                        },
-                                        y: {
-                                            ticks: {
-                                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
-                                            },
-                                            border: {
-                                                color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
-                                            },
-                                            grid: {
-                                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
-                                            },
-                                            suggestedMin: 15,
-                                            suggestedMax: 40
                                         }
-                                    }
-                                },
-                            });
-                            ChartsArray.push(myChart{{ i }})
-                        </script>
+                                    },
+                                });
+                                }
+                                else{
+                                    myChart{{ i }} = new Chart(ctx, {
+
+                                    type: 'line',
+                                    data: {
+                                        labels: labels[i],
+                                        datasets: [{
+                                            label: '',
+                                            data: graph[i],
+
+                                        }]
+                                    },
+
+                                    options: {
+
+                                        scales: {
+                                            x: {
+                                                ticks: {
+
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--'),
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                }
+                                            },
+                                            y: {
+                                                ticks: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                },
+                                                //suggestedMin: 15,
+                                                //suggestedMax: 40
+                                            }
+                                        }
+                                    },
+                                });
+                                }
+                                ChartsArray.push(myChart{{ i }})
+                            </script>
+                        </div>
                     </div>
+                    <script>
+                         if(graph[i].length > 9){
+                            var div_graph_scroll = document.getElementById("d{{ i }}");
+                            console.log(div_graph_scroll.width);
+
+                            div_graph_scroll.setAttribute("style","width:"+graph[i].length * multiplier+ "px");
+                         }
+                         else{
+
+                         }
+                    </script>
                 </div>
                 {% if i|add:1|divisibleby:3  %}
                 </div>
