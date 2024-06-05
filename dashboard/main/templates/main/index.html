@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_agents %}
 <!doctype html>
 <html lang="ru">
 <head>
@@ -93,6 +94,35 @@
      <div class="line"></div>
 
     <!--цикл для отрисовки контейнеров со средними значениями-->
+
+
+    {% if request|is_tablet %}
+    <div>
+        {% for i in num_numbs %}
+        {% if i|divisibleby:4 %}
+        <div class="wrapper_div">
+        {% endif %}
+            <div class="data_div">
+                <h1 id="hn{{ i }}" class="text_"></h1>
+                <h1 id="nn{{ i }}" class="number_"></h1>
+                <script>
+                    var element = document.getElementById("hn{{ i }}");
+                    var element1 = document.getElementById("nn{{ i }}");
+
+                    var i = {{ i }};
+                    element.textContent = head_numb[i];
+                    element1.textContent = numbs[i]+ '' + metrics[i];
+                </script>
+            </div>
+
+            {% if i|add:1|divisibleby:4  %}
+            </div>
+            {% endif %}
+            {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if request|is_pc %}
      <div>
         {% for i in num_numbs %}
         {% if i|divisibleby:4 %}
@@ -115,9 +145,173 @@
             </div>
             {% endif %}
             {% endfor %}
-        </div>
+    </div>
+    {% endif %}
+
+    {% if request|is_mobile %}
+    <div>
+       {% for i in num_numbs %}
+       {% if i|divisibleby:2 %}
+       <div class="wrapper_div">
+       {% endif %}
+           <div class="data_div">
+               <h1 id="hn{{ i }}" class="text_"></h1>
+               <h1 id="nn{{ i }}" class="number_"></h1>
+               <script>
+                   var element = document.getElementById("hn{{ i }}");
+                   var element1 = document.getElementById("nn{{ i }}");
+
+                   var i = {{ i }};
+                   element.textContent = head_numb[i];
+                   element1.textContent = numbs[i]+ '' + metrics[i];
+               </script>
+           </div>
+
+           {% if i|add:1|divisibleby:2 %}
+           </div>
+           {% endif %}
+           {% endfor %}
+   </div>
+   {% endif %}
+
+
+   {% if request|is_tablet %}
+   {% for i in num_graphs %}
+   {% if i|divisibleby:3 %}
+   <div class="wrapper_div">
+       {% endif %}
+       <div class="statistic_" id="ds{{ i }}">
+           <h1 id="h{{ i }}" class="text_"></h1>
+           <div class="scroll_div">
+               <div class="graph" id="d{{ i }}">
+                   <canvas id="myChart{{ i }}"></canvas>
+                   <script>
+                       var element = document.getElementById("h{{ i }}");
+                       //var length_{{ i }} = graph[i].length * multiplier;
+                       var i = {{ i }};
+                       console.log(graph[i].length)
+                       element.textContent = head[i];
+                       // Код Chart.js для создания графика
+                       var ctx = document.getElementById('myChart{{ i }}').getContext('2d');
+                       var myChart{{ i }};
+                       if(graph[i].length > 9){
+                       myChart{{ i }} = new Chart(ctx, {
+                           scaleOverride: true,
+
+                           type: 'line',
+                           data: {
+                               labels: labels[i],
+                               datasets: [{
+                                   label: '',
+                                   data: graph[i],
+
+                               }]
+                           },
+
+                           options: {
+                               responsive: true, maintainAspectRatio: false,
+                               width: graph[i].length * multiplier, height: 100,
+                               scales: {
+                                   x: {
+                                       ticks: {
+
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--'),
+                                       },
+                                       border: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                       },
+                                       grid: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                       }
+                                   },
+                                   y: {
+                                       ticks: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                       },
+                                       border: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                       },
+                                       grid: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                       },
+                                       //suggestedMin: 15,
+                                       //suggestedMax: 40
+                                   }
+                               }
+                           },
+                       });
+                       }
+                       else{
+                           myChart{{ i }} = new Chart(ctx, {
+
+                           type: 'line',
+                           data: {
+                               labels: labels[i],
+                               datasets: [{
+                                   label: '',
+                                   data: graph[i],
+
+                               }]
+                           },
+
+                           options: {
+
+                               scales: {
+                                   x: {
+                                       ticks: {
+
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--'),
+                                       },
+                                       border: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                       },
+                                       grid: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                       }
+                                   },
+                                   y: {
+                                       ticks: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                       },
+                                       border: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                       },
+                                       grid: {
+                                           color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                       },
+                                       //suggestedMin: 15,
+                                       //suggestedMax: 40
+                                   }
+                               }
+                           },
+                       });
+                       }
+                       ChartsArray.push(myChart{{ i }})
+                   </script>
+               </div>
+           </div>
+           <script>
+                if(graph[i].length > 9){
+                   var div_graph_scroll = document.getElementById("d{{ i }}");
+                   console.log(div_graph_scroll.width);
+
+                   div_graph_scroll.setAttribute("style","width:"+graph[i].length * multiplier+ "px");
+                }
+                else{
+
+                }
+           </script>
+       </div>
+       {% if i|add:1|divisibleby:3  %}
+       </div>
+       {% endif %}
+       {% endfor %}
+   </div>
+   {% endif %}
+
 
         <!--Цикл для отрисовки контейнеров с графиками-->
+        {% if request|is_pc %}
             {% for i in num_graphs %}
             {% if i|divisibleby:3 %}
             <div class="wrapper_div">
@@ -249,7 +443,141 @@
                 {% endif %}
                 {% endfor %}
             </div>
+            {% endif %}
 
+            {% if request|is_mobile %}
+            {% for i in num_graphs %}
+            {% if i|divisibleby:1 %}
+            <div class="wrapper_div">
+                {% endif %}
+                <div class="statistic_" id="ds{{ i }}">
+                    <h1 id="h{{ i }}" class="text_"></h1>
+                    <div class="scroll_div">
+                        <div class="graph" id="d{{ i }}">
+                            <canvas id="myChart{{ i }}"></canvas>
+                            <script>
+                                var element = document.getElementById("h{{ i }}");
+                                //var length_{{ i }} = graph[i].length * multiplier;
+                                var i = {{ i }};
+                                console.log(graph[i].length)
+                                element.textContent = head[i];
+                                // Код Chart.js для создания графика
+                                var ctx = document.getElementById('myChart{{ i }}').getContext('2d');
+                                var myChart{{ i }};
+                                if(graph[i].length > 9){
+                                myChart{{ i }} = new Chart(ctx, {
+                                    scaleOverride: true,
+
+                                    type: 'line',
+                                    data: {
+                                        labels: labels[i],
+                                        datasets: [{
+                                            label: '',
+                                            data: graph[i],
+
+                                        }]
+                                    },
+
+                                    options: {
+                                        responsive: true, maintainAspectRatio: false,
+                                        width: graph[i].length * multiplier, height: 100,
+                                        scales: {
+                                            x: {
+                                                ticks: {
+
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--'),
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                }
+                                            },
+                                            y: {
+                                                ticks: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                },
+                                                //suggestedMin: 15,
+                                                //suggestedMax: 40
+                                            }
+                                        }
+                                    },
+                                });
+                                }
+                                else{
+                                    myChart{{ i }} = new Chart(ctx, {
+
+                                    type: 'line',
+                                    data: {
+                                        labels: labels[i],
+                                        datasets: [{
+                                            label: '',
+                                            data: graph[i],
+
+                                        }]
+                                    },
+
+                                    options: {
+
+                                        scales: {
+                                            x: {
+                                                ticks: {
+
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--'),
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                }
+                                            },
+                                            y: {
+                                                ticks: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                border: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text--')
+                                                },
+                                                grid: {
+                                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-2')
+                                                },
+                                                //suggestedMin: 15,
+                                                //suggestedMax: 40
+                                            }
+                                        }
+                                    },
+                                });
+                                }
+                                ChartsArray.push(myChart{{ i }})
+                            </script>
+                        </div>
+                    </div>
+                    <script>
+                         if(graph[i].length > 9){
+                            var div_graph_scroll = document.getElementById("d{{ i }}");
+                            console.log(div_graph_scroll.width);
+
+                            div_graph_scroll.setAttribute("style","width:"+graph[i].length * multiplier+ "px");
+                         }
+                         else{
+
+                         }
+                    </script>
+                </div>
+                {% if i|add:1|divisibleby:1  %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
 
             <script src="{% static 'main/js/index.js' %}"></script>
     </main>
