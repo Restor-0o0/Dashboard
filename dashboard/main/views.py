@@ -272,7 +272,7 @@ class DataAPIView(APIView):
 
         ActiveObject = UserObject.objects.filter(User=request.user,Active=True).first().Object
 
-        ActiveGroups = GroupUser.objects.filter(User=request.user).order_by('Priority')
+        ActiveGroups = GroupUser.objects.filter(User=request.user,Active=True).order_by('Priority')
 
 
         for obj in ActiveGroups:
@@ -455,11 +455,15 @@ class SettingsAPIView(APIView):
 
 
     def put(self,request):
+        print(request.data)
         for i in request.data:
-            instance = GroupUser.objects.get(ID=i.get('ID'))
+            print(i.get('ID'))
+            instance = GroupUser.objects.get(ID=i.get('ID'))#.update(TypeCount= i.get('TypeCount'),DrawingType= i.get('DrawingType'),Priority= i.get('Priority'),CountVals= i.get('CountVals'),Active= i.get('Active'))
+            print(instance)
             print(i)
             dat = GroupUserReceiveSerializer(data = i,instance=instance)
             print(dat.is_valid())
+            print(dat.errors)
             dat.save()
 
 

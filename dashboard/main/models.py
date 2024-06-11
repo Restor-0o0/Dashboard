@@ -137,6 +137,3 @@ class GroupUser(models.Model):
     DrawingType = models.ForeignKey(DrawingType, on_delete=models.SET_NULL, null=True)
     Priority = models.IntegerField(default=0)
     Active = models.BooleanField(default=True)
-
-    class Meta:
-        unique_together = ("User", "Group","DrawingType")
